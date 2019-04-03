@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.ebean.Model;
 import play.data.validation.Constraints;
 
@@ -20,7 +21,7 @@ public class Client extends Model {
     public String name;
 
     @ManyToMany (mappedBy = "clients")
-    @Constraints.Required
+    @JsonIgnoreProperties("clients")
     public List<Product> products;
 
 }

@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.ebean.Model;
 
 import javax.persistence.Entity;
@@ -15,5 +16,6 @@ public class Product extends Model {
     public UUID id;
 
     @ManyToMany
+    @JsonIgnoreProperties("products")
     public List<Client> clients;
 }
