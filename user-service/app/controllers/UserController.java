@@ -52,4 +52,14 @@ public class UserController extends Controller {
 
         }, httpExecutionContext.current());
     }
+
+    // todo
+    public CompletionStage<Result> addProductToUser(int productId, int userId) {
+
+    }
+
+    //todo
+    public CompletionStage<Result> deleteProductFromUser(int productId, int userId) {
+
+    }
 }
