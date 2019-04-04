@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.ebean.Model;
 
@@ -16,6 +17,6 @@ public class Product extends Model {
     public Long id;
 
     @ManyToMany
-    @JsonIgnoreProperties("products")
+    @JsonIgnore
     public List<User> users;
 }

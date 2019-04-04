@@ -38,12 +38,10 @@ public class UserRepository {
                 ebeanServer.find(User.class).where().eq("id", id).findOneOrEmpty(), executionContext);
     }
 
-    public CompletionStage<List<Long>> getProductsById(Long id) {
+    public CompletionStage<Optional<User>> getProductsById(Long id) {
         return supplyAsync(() ->
                 ebeanServer.find(User.class)
-                        .where().eq("id", id)
-                        .select("products")
-                        .findSingleAttributeList()
+                        .where().eq("id", id).findOneOrEmpty()
                 , executionContext);
     }
 }

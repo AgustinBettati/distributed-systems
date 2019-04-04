@@ -43,9 +43,9 @@ public class UserController extends Controller {
     }
 
     public CompletionStage<Result> getUserProducts(Long id) {
-        return userRepository.getProductsById(id).thenApplyAsync(products -> {
-            if (products != null) {
-                return ok(Json.toJson(products));
+        return userRepository.getProductsById(id).thenApplyAsync(user -> {
+            if (user.isPresent()) {
+                return ok(Json.toJson(user.get().products));
             } else {
                 return notFound();
             }
