@@ -13,9 +13,9 @@ import java.util.UUID;
 public class Product extends Model {
 
     @Id
-    public UUID id;
+    public Long id;
 
     @ManyToMany
     @JsonIgnoreProperties("products")
-    public List<Client> clients;
+    public List<User> users;
 }

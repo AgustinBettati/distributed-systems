@@ -4,9 +4,9 @@
 
 # Default path will just redirect to the computer list
 
-GET        /api/client                     controllers.ClientController.getAllClients
-GET        /api/client/:id                 controllers.ClientController.getClientById(id: Integer)
+GET        /api/client                     controllers.UserController.getAllUsers
+GET        /api/client/:id                 controllers.UserController.getUserById(id: Integer)
 
-GET        /api/client/:id/products        controllers.ClientController.getClientProducts(id: java.util.UUID)
+GET        /api/client/:id/products        controllers.UserController.getUserProducts(id: Long)
 
 

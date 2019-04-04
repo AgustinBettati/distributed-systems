@@ -3,13 +3,12 @@ package repositories;
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
 import io.ebean.Finder;
-import models.Client;
+import models.User;
 import play.db.ebean.EbeanConfig;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -18,30 +17,30 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  * A repository that executes database operations in a different
  * execution context.
  */
-public class ClientRepository {
+public class UserRepository {
 
     private final EbeanServer ebeanServer;
     private final DatabaseExecutionContext executionContext;
 
     @Inject
-    public ClientRepository(EbeanConfig ebeanConfig, DatabaseExecutionContext executionContext) {
+    public UserRepository(EbeanConfig ebeanConfig, DatabaseExecutionContext executionContext) {
         this.ebeanServer = Ebean.getServer(ebeanConfig.defaultServer());
         this.executionContext = executionContext;
     }
 
-    public CompletionStage<List<Client>> getAll() {
+    public CompletionStage<List<User>> getAll() {
         return supplyAsync(() ->
-                ebeanServer.find(Client.class).findList(), executionContext);
+                ebeanServer.find(User.class).findList(), executionContext);
     }
 
-    public CompletionStage<Optional<Client>> getById(int id) {
+    public CompletionStage<Optional<User>> getById(int id) {
         return supplyAsync(() ->
-                ebeanServer.find(Client.class).where().eq("id", id).findOneOrEmpty(), executionContext);
+                ebeanServer.find(User.class).where().eq("id", id).findOneOrEmpty(), executionContext);
     }
 
-    public CompletionStage<List<UUID>> getProductsById(UUID id) {
+    public CompletionStage<List<Long>> getProductsById(Long id) {
         return supplyAsync(() ->
-                ebeanServer.find(Client.class)
+                ebeanServer.find(User.class)
                         .where().eq("id", id)
                         .select("products")
                         .findSingleAttributeList()

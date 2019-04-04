@@ -11,17 +11,16 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Client extends Model {
+public class User extends Model {
     private static final long serialVersionUID = 1L;
 
     @Id
-    public UUID id;
+    public Long id;
 
     @Constraints.Required
     public String name;
 
-    @ManyToMany (mappedBy = "clients")
-    @JsonIgnoreProperties("clients")
+    @ManyToMany (mappedBy = "users")
+    @JsonIgnoreProperties("users")
     public List<Product> products;
-
 }

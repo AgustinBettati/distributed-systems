@@ -2,13 +2,14 @@
 
 # --- !Ups
 
-insert into product (id) values ('112C8DD8-346B-426E-B06C-75BBA97DCD63');
-insert into client (id, name) values ('112C8DD8-346B-426E-B06C-75BBA97DCD64', 'client name');
-insert into product_client (product_id, client_id) values ('112C8DD8-346B-426E-B06C-75BBA97DCD63', '112C8DD8-346B-426E-B06C-75BBA97DCD64')
+insert into product (id) values (1);
+insert into product (id) values (2);
+insert into user (id, name) values (30, 'client name');
+insert into product_user (product_id, user_id) values (1, 30)
 
 
 # --- !Downs
 
 delete from product;
-delete from client;
-delete from product_client;
+delete from user;
+delete from product_user;
