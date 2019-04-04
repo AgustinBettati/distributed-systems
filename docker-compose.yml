@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  
+  product-service:
+    build: ./product-service
+    ports:
+      - "9000:9000"
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8000:9000"
+
+  client-service:
+    build: ./client-service
+    ports:
+      - "4200:4200"
+    links:
+      - product-service
+      - user-service
+     
+
+  
+ 
+
+ 
+

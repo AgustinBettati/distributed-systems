@@ -21,8 +21,8 @@ RUN \
 WORKDIR /src/main/java
 COPY . /src/main/java
 RUN sbt update
-EXPOSE 9001
+EXPOSE 9000
 ENTRYPOINT ["sbt", "run"]
 
 #build image -> docker build -t client-service .
-#run container -> docker run -t -p 9001:9001 client-service
+#run container -> docker run -t -p 8000:9000 client-service
