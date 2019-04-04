@@ -3,6 +3,7 @@ package repositories;
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
 import io.ebean.Finder;
+import models.Product;
 import models.User;
 import play.db.ebean.EbeanConfig;
 
@@ -38,10 +39,25 @@ public class UserRepository {
                 ebeanServer.find(User.class).where().eq("id", id).findOneOrEmpty(), executionContext);
     }
 
-    public CompletionStage<Optional<User>> getProductsById(Long id) {
-        return supplyAsync(() ->
-                ebeanServer.find(User.class)
-                        .where().eq("id", id).findOneOrEmpty()
-                , executionContext);
+    public void addExistingProductToUser(int userId, Optional<Product> product) {
+        Product product1 = product.get();
+        CompletionStage<Optional<User>> user = getById(userId);
+
+        user.thenApplyAsync(user1 -> {
+            user1.get().products.add(product1);
+            user1.get().save();
+            return user1;
+        });
+    }
+
+    public void deleteExistingProductToUser(int userId, Optional<Product> product) {
+        Product product1 = product.get();
+        CompletionStage<Optional<User>> user = getById(userId);
+
+        user.thenApplyAsync(user1 -> {
+            user1.get().products.remove(product1);
+            user1.get().save();
+            return user1;
+        });
     }
 }
