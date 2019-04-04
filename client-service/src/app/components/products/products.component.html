@@ -1,11 +1,21 @@
-<p>
-  products works!
-</p>
 <div class="container">
   <h3>Products</h3>
   <div class="collection">
-    <a *ngFor="let product of products">
-      {{product.description}}
-    </a>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <th scope="row">{{product.id}}</th>
+          <td>{{product.name}}</td>
+          <td>{{product.description}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
