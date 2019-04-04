@@ -1,4 +1,4 @@
-name := "play-java-ebean-example"
+name := "product-service"
 
 version := "1.0.0-SNAPSHOT"
 
@@ -16,5 +16,7 @@ libraryDependencies += "org.awaitility" % "awaitility" % "2.0.0" % Test
 libraryDependencies += "org.assertj" % "assertj-core" % "3.6.2" % Test
 libraryDependencies += "org.mockito" % "mockito-core" % "2.1.0" % Test
 testOptions in Test += Tests.Argument(TestFrameworks.JUnit, "-a", "-v")
+libraryDependencies += "com.google.protobuf" % "protobuf-java-util" % "3.7.1"
+
 
 javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation", "-Werror")
