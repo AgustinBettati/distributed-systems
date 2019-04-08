@@ -10,7 +10,7 @@ import javax.persistence.ManyToMany;
 import java.util.List;
 
 @Entity
-public class Product extends Model {
+public class Reference extends Model {
 
     @Id
     public Long id;

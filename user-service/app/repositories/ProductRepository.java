@@ -2,7 +2,7 @@ package repositories;
 
 import io.ebean.Ebean;
 import io.ebean.EbeanServer;
-import models.Product;
+import models.Reference;
 import play.db.ebean.EbeanConfig;
 
 import javax.inject.Inject;
@@ -21,9 +21,9 @@ public class ProductRepository {
         this.executionContext = executionContext;
     }
 
-    public CompletionStage<Optional<Product>> getById(int id) {
+    public CompletionStage<Optional<Reference>> getById(int id) {
         return supplyAsync(() ->
-                ebeanServer.find(Product.class).where().eq("id", id).findOneOrEmpty(), executionContext);
+                ebeanServer.find(Reference.class).where().eq("id", id).findOneOrEmpty(), executionContext);
     }
 
 

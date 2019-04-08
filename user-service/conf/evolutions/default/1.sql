@@ -1,17 +1,15 @@
-# --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions
 
 # --- !Ups
 
-create table product (
+create table reference (
   id                            bigint auto_increment not null,
-  constraint pk_product primary key (id)
+  constraint pk_reference primary key (id)
 );
 
-create table product_user (
-  product_id                    bigint not null,
+create table reference_user (
+  reference_id                    bigint not null,
   user_id                       bigint not null,
-  constraint pk_product_user primary key (product_id,user_id)
+  constraint pk_reference_user primary key (reference_id,user_id)
 );
 
 create table user (
@@ -20,24 +18,24 @@ create table user (
   constraint pk_user primary key (id)
 );
 
-create index ix_product_user_product on product_user (product_id);
-alter table product_user add constraint fk_product_user_product foreign key (product_id) references product (id) on delete restrict on update restrict;
+create index ix_reference_user_reference on reference_user (reference_id);
+alter table reference_user add constraint fk_reference_user_reference foreign key (reference_id) references reference (id) on delete restrict on update restrict;
 
-create index ix_product_user_user on product_user (user_id);
-alter table product_user add constraint fk_product_user_user foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_reference_user_user on reference_user (user_id);
+alter table reference_user add constraint fk_reference_user_user foreign key (user_id) references user (id) on delete restrict on update restrict;
 
 
 # --- !Downs
 
-alter table product_user drop constraint if exists fk_product_user_product;
-drop index if exists ix_product_user_product;
+alter table reference_user drop constraint if exists fk_reference_user_reference;
+drop index if exists ix_reference_user_reference;
 
-alter table product_user drop constraint if exists fk_product_user_user;
-drop index if exists ix_product_user_user;
+alter table reference_user drop constraint if exists fk_reference_user_user;
+drop index if exists ix_reference_user_user;
 
-drop table if exists product;
+drop table if exists reference;
 
-drop table if exists product_user;
+drop table if exists reference_user;
 
 drop table if exists user;
 
