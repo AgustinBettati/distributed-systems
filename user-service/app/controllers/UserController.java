@@ -5,6 +5,7 @@ import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import repositories.ProductRepository;
 import repositories.UserRepository;
 
 import javax.inject.Inject;
@@ -16,11 +17,13 @@ import java.util.concurrent.CompletionStage;
 public class UserController extends Controller {
 
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
     private final HttpExecutionContext httpExecutionContext;
 
     @Inject
-    public UserController(UserRepository userRepository, HttpExecutionContext httpExecutionContext) {
+    public UserController(UserRepository userRepository, ProductRepository productRepository, HttpExecutionContext httpExecutionContext) {
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
         this.httpExecutionContext = httpExecutionContext;
     }
 
@@ -43,9 +46,9 @@ public class UserController extends Controller {
     }
 
     public CompletionStage<Result> getUserProducts(Long id) {
-        return userRepository.getProductsById(id).thenApplyAsync(user -> {
+        return userRepository.getById(Math.toIntExact(id)).thenApplyAsync(user -> {
             if (user.isPresent()) {
-                return ok(Json.toJson(user.get().products));
+                return ok(Json.toJson(user.get().references));
             } else {
                 return notFound();
             }
@@ -53,13 +56,31 @@ public class UserController extends Controller {
         }, httpExecutionContext.current());
     }
 
-    // todo
     public CompletionStage<Result> addProductToUser(int productId, int userId) {
+        return productRepository.getById(productId).thenApplyAsync(product -> {
+            if (product.isPresent()) {
+                userRepository.addExistingProductToUser(userId, product);
+                return ok(Json.toJson(product.get()));
 
+            } else {
+                return notFound();
+
+            }
+
+        }, httpExecutionContext.current());
     }
 
-    //todo
-    public CompletionStage<Result> deleteProductFromUser(int productId, int userId) {
+    public CompletionStage<Result> deleteProductOfUser(int productId, int userId) {
+        return productRepository.getById(productId).thenApplyAsync(product -> {
+            if (product.isPresent()) {
+                userRepository.deleteExistingProductToUser(userId, product);
+                return ok(Json.toJson(product.get()));
 
+            } else {
+                return notFound();
+
+            }
+
+        }, httpExecutionContext.current());
     }
 }

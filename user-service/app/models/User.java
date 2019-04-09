@@ -21,5 +21,5 @@ public class User extends Model {
 
     @ManyToMany (mappedBy = "users")
     @JsonIgnoreProperties("users")
-    public List<Product> products;
+    public List<Reference> references;
 }

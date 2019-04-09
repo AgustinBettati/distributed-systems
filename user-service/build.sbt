@@ -6,6 +6,7 @@ scalaVersion := "2.12.8"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
+libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.15"
 libraryDependencies += guice
 libraryDependencies += jdbc
 libraryDependencies += evolutions

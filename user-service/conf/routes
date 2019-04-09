@@ -4,9 +4,11 @@
 
 # Default path will just redirect to the computer list
 
-GET        /api/user                     controllers.UserController.getAllUsers
-GET        /api/user/:id                 controllers.UserController.getUserById(id: Integer)
+GET        /api/user                                           controllers.UserController.getAllUsers
+GET        /api/user/:id                                       controllers.UserController.getUserById(id: Integer)
 
-GET        /api/user/:id/products        controllers.UserController.getUserProducts(id: Long)
+GET        /api/user/:id/products                              controllers.UserController.getUserProducts(id: Long)
+GET        /api/user/:userId/products/:productId               controllers.UserController.addProductToUser(productId:Integer,userId :Integer)
+GET        /api/user/:userId/products/delete/:productId        controllers.UserController.deleteProductOfUser(productId:Integer,userId :Integer)
 
 
