@@ -1,5 +1,6 @@
 package repository;
 
+import generated.ProductServiceClient;
 import io.ebean.*;
 import models.Product;
 import play.db.ebean.EbeanConfig;

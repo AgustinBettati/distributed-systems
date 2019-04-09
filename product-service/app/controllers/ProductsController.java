@@ -1,6 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import generated.Product;
+import generated.ProductRequest;
+import generated.ProductServiceClient;
+import generated.ProductsRequest;
 import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -19,13 +23,22 @@ public class ProductsController extends Controller {
     private final ProductRepository productRepository;
     private final HttpExecutionContext httpExecutionContext;
 
+//    private final ProductServiceClient productServiceClient;
+
     @Inject
     public ProductsController(ProductRepository productRepository, HttpExecutionContext httpExecutionContext) {
         this.productRepository = productRepository;
         this.httpExecutionContext = httpExecutionContext;
     }
+/*
 
-    public CompletionStage<Result> getAllProducts(Http.Request request) {
+    @Inject
+    public ProductsController(ProductServiceClient productServiceClient) {
+        this.productServiceClient = productServiceClient;
+    }
+*/
+
+    public CompletionStage<Result> getAllProducts() {
         return productRepository.getAll().thenApplyAsync(list -> {
             JsonNode jsonNode = Json.toJson(list);
             return ok(jsonNode);
@@ -43,4 +56,9 @@ public class ProductsController extends Controller {
 
         }, httpExecutionContext.current());
     }
+
+    /*public CompletionStage<Product> getProductById(int id) {
+        ProductRequest productRequest = ProductRequest.newBuilder().setId(id).build();
+        return productServiceClient.getProduct(productRequest);
+    }*/
 }
