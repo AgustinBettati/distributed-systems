@@ -26,12 +26,12 @@ services:
     ports:
       - "9000:9000"
 
-  # user-service:
-  #   build: ./user-service-grpc
-  #   depends_on:
-  #   - database
-  #   ports:
-  #     - "8000:9000"
+  user-service:
+    build: ./user-service-grpc
+    depends_on:
+    - database
+    ports:
+      - "8000:9000"
 
 
 
