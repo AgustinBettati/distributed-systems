@@ -1,12 +1,12 @@
 import java.sql.{Connection, DriverManager}
 
-case class UserSchema(id: Int, name: String)
+case class UserSchema(id: Int, name: String, productRefs: Seq[Int])
 
 object UserDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-    val jdbcHostname = "localhost" // si vas a correr localmente
-//  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
+  val jdbcHostname = "localhost" // si vas a correr localmente
+  //  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"
@@ -50,7 +50,7 @@ object UserDatabase {
       connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,30);")
     }
 
-    if(!tableExists) {
+    if (!tableExists) {
       setupUser
       setupProductUser
     }
@@ -60,8 +60,13 @@ object UserDatabase {
     val statement = connection.createStatement()
     val resultSet = statement.executeQuery("SELECT * FROM user")
     var users: List[UserSchema] = Nil
-    while (resultSet.next()){
-      users = UserSchema(resultSet.getInt("id"), resultSet.getString("name")) :: users
+    while (resultSet.next()) {
+      val userId = resultSet.getInt("id")
+      users =
+        UserSchema(
+          userId,
+          resultSet.getString("name"),
+          getProductsFromUser(userId)) :: users
     }
     users
   }
@@ -69,12 +74,25 @@ object UserDatabase {
   def getUserById(id: Int): Option[UserSchema] = {
     val statement = connection.createStatement()
     val resultSet = statement.executeQuery(s"SELECT * FROM user WHERE id = $id")
-    if(resultSet.next()){
-      Some(UserSchema(resultSet.getInt("id"), resultSet.getString("name")))
+    if (resultSet.next()) {
+      val userId = resultSet.getInt("id")
+      Some(UserSchema(
+        userId,
+        resultSet.getString("name"),
+        getProductsFromUser(userId)))
     }
     else None
   }
 
+  private def getProductsFromUser(idUser: Int): List[Int] = {
+    var result: List[Int] = Nil
+    val statement = connection.createStatement()
+    val resultSet = statement.executeQuery(s"SELECT * FROM product_user WHERE user_id = $idUser")
+    while (resultSet.next()) {
+      result = resultSet.getInt("product_id") :: result
+    }
+    result
+  }
 
 
   private def tableExists: Boolean = {
