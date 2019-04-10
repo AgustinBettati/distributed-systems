@@ -1,5 +1,5 @@
 import example.hello.{HelloReply, HelloRequest, HelloServiceGrpc}
-import generated.product_service.{ProductRequest, ProductServiceGrpc, ProductsRequest}
+import generated.product_service.{ProductList, ProductRequest, ProductServiceGrpc, ProductsRequest}
 import generated.user.{ProductUserRequest, UserRequest, UserServiceGrpc, UsersRequest}
 import io.grpc.{ManagedChannelBuilder, ServerBuilder}
 
@@ -29,19 +29,23 @@ object ClientDemo extends App {
   val users = stubUser.getUsers(UsersRequest())
 
   users.onComplete {
-    case Success(value) => value.users.foreach(u => {
-      print(u.name + "\t\t" + u.productReferences)
-      val products = stub.getProducts(ProductsRequest())
+    case Success(value) => {
+      value.users.foreach(u =>
+        print(u.name + "\t\t" + u.productReferences.get.id + "\n")
+      )
+
+      val products: Future[ProductList] = stub.getProducts(ProductsRequest())
       products.onComplete {
         case Success(value) => {
-          print(for (elem <- value.product) {
-            print(elem.id + " ----> " + elem.name + "\n")
-          })
-          stubUser.addProduct(ProductUserRequest(1, 1)).onComplete {
+          for (elem <- value.product) {
+            print(elem.id + " ----> " + elem.name + " , " + elem.description + "\n")
+          }
+          print("\n\n Adding product 1 to flor...\n")
+          stubUser.addProduct(ProductUserRequest(40, 1)).onComplete {
             case Success(value) => {
-              stubUser.getProductsOfUser(UserRequest(1)).onComplete {
+              stubUser.getUser(UserRequest(40)).onComplete {
                 case Success(value) => {
-                  print(value.id)
+                  print(value.name + "\t\t" + value.productReferences.get.id + "\n")
                 }
                 case Failure(exception) => print(exception)
               }
@@ -53,8 +57,10 @@ object ClientDemo extends App {
         case Failure(exception) => print(exception)
       }
     }
-    )
-    case Failure(exception) => print(exception)
+
+
+    case Failure(exception)
+    => print(exception)
   }
 
 
@@ -65,9 +71,9 @@ object ClientDemo extends App {
   //  }
 
 
-  print("ADD PRODUCT ")
+  //  print("ADD PRODUCT ")
 
-//  stubUser.addProduct()
+  //  stubUser.addProduct()
   //  val start = System.currentTimeMillis()
   //
   //  val futures: immutable.Seq[Future[HelloReply]] = for (i <- 1 to 10000) yield
