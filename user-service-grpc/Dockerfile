@@ -24,5 +24,5 @@ RUN sbt update
 EXPOSE 9000
 ENTRYPOINT ["sbt", "run 9000"]
 
-#build image -> docker build -t user-service .
-#run container -> docker run -t -p 8000:9000 user-service
+#build image -> docker build -t user-service-grpc .
+#run container -> docker run -t -p 8000:9000 user-service-grpc

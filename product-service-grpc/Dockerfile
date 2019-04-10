@@ -24,5 +24,7 @@ RUN sbt update
 EXPOSE 9000
 ENTRYPOINT ["sbt", "run"]
 
+#docker-compose down
+#antes tener levantado mysql corriendo docker-compose run --service-ports database
 #build image -> docker build -t product-service-grpc .
 #run container -> docker run -t -p 5000:9000 product-service-grpc
