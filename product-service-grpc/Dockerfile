@@ -25,4 +25,4 @@ EXPOSE 9000
 ENTRYPOINT ["sbt", "run"]
 
 #build image -> docker build -t product-service-grpc .
-#run container -> docker run -t -p 9000:9000 product-service-grpc
+#run container -> docker run -t -p 5000:9000 product-service-grpc

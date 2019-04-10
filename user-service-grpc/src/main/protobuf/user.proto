@@ -6,6 +6,9 @@ option java_package = "generated";
 service UserService {
     rpc GetUser (UserRequest) returns (User);
     rpc GetUsers (UsersRequest) returns (UserList);
+    rpc AddProduct (ProductUserRequest) returns (User);
+    rpc DeleteProduct (ProductUserRequest) returns (User);
+    rpc GetProductsOfUser (UserRequest) returns (ProductReferences);
 }
 
 message User {
@@ -24,7 +27,11 @@ message UserRequest {
 
 message UsersRequest {
 }
+message ProductUserRequest {
+    int32 idUser = 1;
+    int32 idProduct = 2 ;
 
+}
 message ProductReferences {
     repeated int32 id = 1;
 }
