@@ -5,7 +5,8 @@ case class UserSchema(id: Int, name: String)
 object UserDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-  val jdbcHostname = "localhost"
+    val jdbcHostname = "localhost" // si vas a correr localmente
+//  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"
@@ -16,45 +17,43 @@ object UserDatabase {
 
   def setup(): Unit = {
     def setupUser = {
-      if (!tableExists) {
-        println("Creating user table")
-        connection.createStatement().execute(
-          """
-            |create table user (
-            |  id                            bigint auto_increment not null,
-            |  name                          varchar(255),
-            |  constraint pk_user primary key (id)
-            |);
-          """.stripMargin)
-        connection.createStatement().execute("insert into user (id,name) values (  10,'gonza');")
-        connection.createStatement().execute("insert into user (id,name) values (  20,'apu');")
-        connection.createStatement().execute("insert into user (id,name) values (  30,'marcos');")
-        connection.createStatement().execute("insert into user (id,name) values (  40,'flor');")
-      }
+      println("Creating user table")
+      connection.createStatement().execute(
+        """
+          |create table user (
+          |  id                            bigint auto_increment not null,
+          |  name                          varchar(255),
+          |  constraint pk_user primary key (id)
+          |);
+        """.stripMargin)
+      connection.createStatement().execute("insert into user (id,name) values (  10,'gonza');")
+      connection.createStatement().execute("insert into user (id,name) values (  20,'apu');")
+      connection.createStatement().execute("insert into user (id,name) values (  30,'marcos');")
+      connection.createStatement().execute("insert into user (id,name) values (  40,'flor');")
     }
     def setupProductUser = {
-      if (!tableExists) {
-        println("Creating product_user table")
-        connection.createStatement().execute(
-          """
-            |create table product_user (
-            |  product_id                     bigint not null,
-            |  user_id                        bigint not null,
-            |  constraint pk_product_user primary key (product_id, user_id)
-            |);
-          """.stripMargin)
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,10);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,10);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  3,10);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  4,10);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,20);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,20);")
-        connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,30);")
-      }
+      println("Creating product_user table")
+      connection.createStatement().execute(
+        """
+          |create table product_user (
+          |  product_id                     bigint not null,
+          |  user_id                        bigint not null,
+          |  constraint pk_product_user primary key (product_id, user_id)
+          |);
+        """.stripMargin)
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,10);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,10);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  3,10);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  4,10);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,20);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,20);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,30);")
     }
 
-    setupUser
-    setupProductUser
+    if(!tableExists) {
+      setupUser
+      setupProductUser
+    }
   }
 
   def getAllUsers: List[UserSchema] = {
@@ -75,6 +74,8 @@ object UserDatabase {
     }
     else None
   }
+
+
 
   private def tableExists: Boolean = {
     val dbm = connection.getMetaData
