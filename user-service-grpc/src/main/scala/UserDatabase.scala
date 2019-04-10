@@ -94,6 +94,25 @@ object UserDatabase {
     result
   }
 
+  def addProductToUser(productId: Int, userId: Int): Boolean = {
+    try {
+      connection.createStatement().execute(s"insert into product_user (product_id,user_id) values ($productId,$userId);")
+      true
+    }
+    catch{
+      case e: Exception => false
+    }
+  }
+
+  def deleteProductFromUser(productId: Int, userId: Int): Boolean = {
+    try {
+      connection.createStatement().execute(s"DELETE FROM product_user WHERE product_id = $productId AND user_id = $userId")
+      true
+    }
+    catch{
+      case e: Exception => false
+    }
+  }
 
   private def tableExists: Boolean = {
     val dbm = connection.getMetaData
