@@ -67,7 +67,7 @@ object ClientDemo extends App {
 
   print("ADD PRODUCT ")
 
-  stubUser.addProduct()
+//  stubUser.addProduct()
   //  val start = System.currentTimeMillis()
   //
   //  val futures: immutable.Seq[Future[HelloReply]] = for (i <- 1 to 10000) yield

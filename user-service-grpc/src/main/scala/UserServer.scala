@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 object UserServer extends App {
   UserDatabase.setup()
 
-  val port = 9000
+  val port = 8000
   val server = ServerBuilder.forPort(port)
     .addService(UserServiceGrpc.bindService(new UserService(), ExecutionContext.global))
     .build()

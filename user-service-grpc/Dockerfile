@@ -21,8 +21,8 @@ RUN \
 WORKDIR /src/main/java
 COPY . /src/main/java
 RUN sbt update
-EXPOSE 9000
-ENTRYPOINT ["sbt", "run 9000"]
+EXPOSE 8000
+ENTRYPOINT ["sbt", "run"]
 
 #build image -> docker build -t user-service-grpc .
-#run container -> docker run -t -p 8000:9000 user-service-grpc
+#run container -> docker run -t -p 8000:8000 user-service-grpc
