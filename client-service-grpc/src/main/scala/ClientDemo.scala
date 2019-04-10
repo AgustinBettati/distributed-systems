@@ -30,22 +30,26 @@ object ClientDemo extends App {
 
   users.onComplete {
     case Success(value) => {
+      print("\nUsers with their references: \n")
       value.users.foreach(u =>
-        print(u.name + "\t\t" + u.productReferences.get.id + "\n")
+        print(u.name + "\t\t" + u.productReferences.get.id.mkString(", ")  + "\n")
       )
 
       val products: Future[ProductList] = stub.getProducts(ProductsRequest())
       products.onComplete {
         case Success(value) => {
+          print("\nProducts: \n")
+
           for (elem <- value.product) {
             print(elem.id + " ----> " + elem.name + " , " + elem.description + "\n")
           }
-          print("\n\n Adding product 1 to flor...\n")
+          print("\n\nAdding product 1 to flor...\n")
           stubUser.addProduct(ProductUserRequest(40, 1)).onComplete {
             case Success(value) => {
+              print("Product added!\n")
               stubUser.getUser(UserRequest(40)).onComplete {
                 case Success(value) => {
-                  print(value.name + "\t\t" + value.productReferences.get.id + "\n")
+                  print(value.name + "\t\t" + value.productReferences.get.id.mkString(", ") + "\n")
                 }
                 case Failure(exception) => print(exception)
               }
