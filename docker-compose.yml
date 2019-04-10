@@ -5,8 +5,6 @@ services:
 # para levantar base de datos y servicios
 # docker-compose down
 # docker-compose up --force-recreate
-# entrarar a 8000, despues a 9000 y aplicar evolutions
-# el front se levanta corriendo un container aparte
 
 # para correr solo la base de datos:
 # docker-compose run --service-ports database
@@ -22,37 +20,19 @@ services:
       - "3306:3306"
 
   product-service:
-    build: ./product-service
-    stdin_open: true
+    build: ./product-service-grpc
     depends_on:
     - database
     ports:
       - "9000:9000"
 
-  # product-service-2:
-  #   build: ./product-service
-  #   stdin_open: true
+  # user-service:
+  #   build: ./user-service-grpc
   #   depends_on:
   #   - database
   #   ports:
-  #     - "9001:9000"
+  #     - "8000:9000"
 
-  user-service:
-    build: ./user-service
-    stdin_open: true
-    depends_on:
-    - database
-    ports:
-      - "8000:9000"
-
-  # user-service-2:
-  #   build: ./user-service
-  #   stdin_open: true
-  #   depends_on:
-  #   - database
-  #   ports:
-  #     - "8001:9000"
-  
 
 
      
