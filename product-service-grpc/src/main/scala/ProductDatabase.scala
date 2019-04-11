@@ -5,8 +5,8 @@ case class ProductSchema(id: Int, name: String, description: String)
 object ProductDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-  val jdbcHostname = "localhost" // si vas a correr localmente
-//  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
+//  val jdbcHostname = "localhost" // si vas a correr localmente
+  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"

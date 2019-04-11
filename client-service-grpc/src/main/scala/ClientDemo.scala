@@ -1,98 +1,61 @@
-import example.hello.{HelloReply, HelloRequest, HelloServiceGrpc}
+import generated.product_service.ProductServiceGrpc.ProductServiceStub
 import generated.product_service.{ProductList, ProductRequest, ProductServiceGrpc, ProductsRequest}
+import generated.user.UserServiceGrpc.UserServiceStub
 import generated.user.{ProductUserRequest, UserRequest, UserServiceGrpc, UsersRequest}
-import io.grpc.{ManagedChannelBuilder, ServerBuilder}
+import io.grpc.{ManagedChannel, ManagedChannelBuilder, ServerBuilder}
 
-import scala.collection.immutable
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
 
 
 object ClientDemo extends App {
 
-  implicit val ec = ExecutionContext.global
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
-  val channel = ManagedChannelBuilder.forAddress("localhost", 9000)
-    .usePlaintext(true)
-    .build()
+  def obtainServiceBalancer[T](channelToStub: ManagedChannel => T, ports: List[Int]): ClientBalancer[T] = {
+    val stubs = ports.map {
+      port => channelToStub(ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build())
+    }
+    ClientBalancer(stubs)
+  }
+
+  private val productServiceBalancer = obtainServiceBalancer((channel: ManagedChannel) => ProductServiceGrpc.stub(channel), List(9000, 9001))
+  private val userServiceBalancer = obtainServiceBalancer((channel: ManagedChannel) => UserServiceGrpc.stub(channel), List(8000, 8001))
 
 
-  val blockingStub = ProductServiceGrpc.blockingStub(channel)
-  val stub = ProductServiceGrpc.stub(channel)
-
-  val channelUser = ManagedChannelBuilder.forAddress("localhost", 8000)
-    .usePlaintext(true)
-    .build()
-  val blockingStubUser = UserServiceGrpc.blockingStub(channelUser)
-  val stubUser = UserServiceGrpc.stub(channelUser)
-
-  val users = stubUser.getUsers(UsersRequest())
-
+  val users = userServiceBalancer.obtainStub.getUsers(UsersRequest())
   users.onComplete {
-    case Success(value) => {
+    case Success(value) =>
       print("\nUsers with their references: \n")
       value.users.foreach(u =>
-        print(u.name + "\t\t" + u.productReferences.get.id.mkString(", ")  + "\n")
+        print(u.name + "\t\t" + u.productReferences.get.id.mkString(", ") + "\n")
       )
 
-      val products: Future[ProductList] = stub.getProducts(ProductsRequest())
+      val products: Future[ProductList] = productServiceBalancer.obtainStub.getProducts(ProductsRequest())
       products.onComplete {
-        case Success(value) => {
+        case Success(productsResp) =>
           print("\nProducts: \n")
 
-          for (elem <- value.product) {
+          for (elem <- productsResp.product) {
             print(elem.id + " ----> " + elem.name + " , " + elem.description + "\n")
           }
           print("\n\nAdding product 1 to flor...\n")
-          stubUser.addProduct(ProductUserRequest(40, 1)).onComplete {
-            case Success(value) => {
+          userServiceBalancer.obtainStub.addProduct(ProductUserRequest(40, 1)).onComplete {
+            case Success(_) =>
               print("Product added!\n")
-              stubUser.getUser(UserRequest(40)).onComplete {
-                case Success(value) => {
-                  print(value.name + "\t\t" + value.productReferences.get.id.mkString(", ") + "\n")
-                }
+              userServiceBalancer.obtainStub.getUser(UserRequest(40)).onComplete {
+                case Success(user) =>
+                  print(user.name + "\t\t" + user.productReferences.get.id.mkString(", ") + "\n")
+                  userServiceBalancer.obtainStub.deleteProduct(ProductUserRequest(40, 1))
                 case Failure(exception) => print(exception)
               }
-
-            }
             case Failure(exception) => print(exception)
           }
-        }
         case Failure(exception) => print(exception)
       }
-    }
-
-
     case Failure(exception)
     => print(exception)
   }
 
-
-  //  val product1=stub.getProduct(ProductRequest(1))
-  //  product1.onComplete {
-  //    case Success(value) => print(value.name+ "\n")
-  //    case Failure(exception) => print(exception)
-  //  }
-
-
-  //  print("ADD PRODUCT ")
-
-  //  stubUser.addProduct()
-  //  val start = System.currentTimeMillis()
-  //
-  //  val futures: immutable.Seq[Future[HelloReply]] = for (i <- 1 to 10000) yield
-  //     stub.sayHello(HelloRequest("Juan"))
-  //
-  //
-  //  val result: Future[immutable.Seq[HelloReply]] = Future.sequence(futures)
-  //
-  //  result.onComplete { r =>
-  //    val end = System.currentTimeMillis()
-  //
-  //    println(end - start)
-  //
-  //    println("Completed")
-  //  }
-  //
   System.in.read()
 }
