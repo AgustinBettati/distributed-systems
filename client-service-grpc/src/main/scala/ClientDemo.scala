@@ -1,8 +1,8 @@
-import generated.product_service.ProductServiceGrpc.ProductServiceStub
+import LoadBalancers.{ProductBalancer, UserBalancer}
 import generated.product_service.{ProductList, ProductRequest, ProductServiceGrpc, ProductsRequest}
-import generated.user.UserServiceGrpc.UserServiceStub
 import generated.user.{ProductUserRequest, UserRequest, UserServiceGrpc, UsersRequest}
-import io.grpc.{ManagedChannel, ManagedChannelBuilder, ServerBuilder}
+import io.grpc.stub.AbstractStub
+import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
@@ -12,15 +12,18 @@ object ClientDemo extends App {
 
   implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
-  def obtainServiceBalancer[T](channelToStub: ManagedChannel => T, ports: List[Int]): ClientBalancer[T] = {
-    val stubs = ports.map {
-      port => channelToStub(ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build())
+  def obtainStubs[T](channelToStub: ManagedChannel => T, ports: List[Int]): List[(T, Int)] = {
+    ports.map {
+      port => (channelToStub(ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()), port)
     }
-    ClientBalancer(stubs)
   }
 
-  private val productServiceBalancer = obtainServiceBalancer((channel: ManagedChannel) => ProductServiceGrpc.stub(channel), List(9000, 9001))
-  private val userServiceBalancer = obtainServiceBalancer((channel: ManagedChannel) => UserServiceGrpc.stub(channel), List(8000, 8001))
+  private val productServiceBalancer = ProductBalancer(
+    obtainStubs((channel: ManagedChannel) => ProductServiceGrpc.stub(channel), List(9000, 9001))
+  )
+  private val userServiceBalancer = UserBalancer(
+    obtainStubs((channel: ManagedChannel) => UserServiceGrpc.stub(channel), List(8000, 8001))
+  )
 
 
   val users = userServiceBalancer.obtainStub.getUsers(UsersRequest())
@@ -49,12 +52,11 @@ object ClientDemo extends App {
                   userServiceBalancer.obtainStub.deleteProduct(ProductUserRequest(40, 1))
                 case Failure(exception) => print(exception)
               }
-            case Failure(exception) => print(exception)
+            case Failure(exception) => print("failed to add product to user")
           }
-        case Failure(exception) => print(exception)
+        case Failure(exception) => print("failed to obtain products")
       }
-    case Failure(exception)
-    => print(exception)
+    case Failure(exception) => print("failed to obtain users")
   }
 
   System.in.read()

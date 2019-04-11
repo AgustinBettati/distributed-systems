@@ -6,6 +6,7 @@ option java_package = "generated";
 service ProductService {
   rpc GetProduct (ProductRequest) returns (Product);
   rpc GetProducts (ProductsRequest) returns (ProductList);
+  rpc HealthCheck (Ping) returns (Ping);
 }
 
 message Product {
@@ -23,4 +24,7 @@ message ProductRequest {
 }
 
 message ProductsRequest {
+}
+
+message Ping {
 }

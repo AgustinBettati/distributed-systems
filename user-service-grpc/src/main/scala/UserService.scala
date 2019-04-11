@@ -31,12 +31,6 @@ class UserService extends UserServiceGrpc.UserService {
     Future.successful(ModificationResponse(UserDatabase.deleteProductFromUser(request.idProduct, request.idUser)))
   }
 
-
-  override def getProductsOfUser(request: UserRequest): Future[ProductReferences] = {
-    val pr = new ProductReferences()
-    Future.successful(
-      pr
-    )
-  }
+  override def healthCheck(request: Ping): Future[Ping] = Future.successful(Ping())
 }
 

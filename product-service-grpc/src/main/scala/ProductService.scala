@@ -1,5 +1,5 @@
 import generated.product_service
-import generated.product_service.{ProductList, ProductRequest, ProductServiceGrpc, ProductsRequest}
+import generated.product_service._
 
 import scala.concurrent.Future
 
@@ -21,4 +21,6 @@ class ProductService extends ProductServiceGrpc.ProductService {
       )
     )
   }
+
+  override def healthCheck(request: Ping): Future[Ping] = Future.successful(Ping())
 }
