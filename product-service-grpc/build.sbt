@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
     "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
     "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-    "mysql" % "mysql-connector-java" % "8.0.15"
+    "mysql" % "mysql-connector-java" % "8.0.15",
+    "io.etcd" % "jetcd-core" % "0.3.0"
 
 )
 
