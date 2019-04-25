@@ -9,6 +9,7 @@ object ProductServer extends App {
   ProductDatabase.setup()
 
   val port = 9000
+
   val server = ServerBuilder.forPort(port)
     .addService(ProductServiceGrpc.bindService(new ProductService(), ExecutionContext.global))
     .build()
