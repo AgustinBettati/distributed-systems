@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated";
+
+service ActivityService {
+    rpc GetUserActivity (UserActivityRequest) returns (UserActivity);
+    rpc GetInactiveUsers (UsersActivityRequest) returns (UserActivityList);
+    rpc registerActivity (UserActivity) returns (UserActivity);
+    //  rpc GetProducts (UsersActivityRequest) returns (UserActivityList);
+    rpc HealthCheck (Ping) returns (Ping);
+}
+
+message UserActivity {
+    int32 id = 1;
+    string date = 2;
+}
+
+message UserActivityList {
+    repeated UserActivity users = 1;
+}
+
+message UserActivityRequest {
+    int32 id = 1;
+}
+
+message UsersActivityRequest {
+}
+
+message Ping {
+}
+
