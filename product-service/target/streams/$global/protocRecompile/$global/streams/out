@@ -1,0 +1,7 @@
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC service interface for [example.myapp.helloworld.grpc.GreeterService][0m
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC Client [example.myapp.helloworld.grpc.GreeterService][0m
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC Lifted Client interface[example.myapp.helloworld.grpc.GreeterService][0m
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC service handler for example.myapp.helloworld.grpc.GreeterService[0m
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC play client provider for example.myapp.helloworld.grpc.GreeterService[0m
+[0m[[0m[0minfo[0m] [0m[0mGenerated [example.myapp.helloworld.grpc.AkkaGrpcClientModule] add it to play.modules.enabled and a section with Akka gRPC client config under akka.grpc.client."servicepackage.ServiceName" to be able to inject client instances.[0m
+[0m[[0m[0minfo[0m] [0m[0mGenerating Akka gRPC service play router for example.myapp.helloworld.grpc.GreeterService[0m

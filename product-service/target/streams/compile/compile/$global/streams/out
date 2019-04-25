@@ -1,0 +1,13 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: not found: type Request[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: not found: type Request[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: not found: type Request[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: trait Request takes type parameters[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: trait Request takes type parameters[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/abettati/projects/tp-sistemas-distribuidos/product-service/conf/routes:7:1: trait Request takes type parameters[0m
+[0m[[0m[31merror[0m] [0m[0mGET     /api/product              controllers.ProductsController.getAllProducts(request: Request)[0m
+[0m[[0m[31merror[0m] [0m[0m6 errors found[0m

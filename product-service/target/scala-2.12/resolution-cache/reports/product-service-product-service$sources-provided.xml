@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="product-service"
+		module="product-service$sources"
+		revision="1.0.0-SNAPSHOT"
+		conf="provided"
+		confs="compile, runtime, test, provided, optional, protobuf, web-assets, web-assets-test, web-plugin, universal, universal-docs, universal-src, windows, docker, linux, rpm, debian, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool, javaagent, docs"
+		date="20190408223106"/>
+	<dependencies>
+		<module organisation="org.mortbay.jetty.alpn" name="jetty-alpn-agent">
+			<revision name="2.0.9" status="release" pubdate="20181018100741" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/jetty-project/jetty-alpn-agent" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2899" time="0" location="/Users/abettati/.ivy2/cache/org.mortbay.jetty.alpn/jetty-alpn-agent/ivy-2.0.9.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/mortbay/jetty/alpn/jetty-alpn-agent/2.0.9/jetty-alpn-agent-2.0.9.pom"/>
+				<caller organisation="product-service" name="product-service$sources" conf="provided" rev="2.0.9" rev-constraint-default="2.0.9" rev-constraint-dynamic="2.0.9" callerrev="1.0.0-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jetty-alpn-agent" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1760953" time="2060" location="/Users/abettati/.ivy2/cache/org.mortbay.jetty.alpn/jetty-alpn-agent/srcs/jetty-alpn-agent-2.0.9-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/mortbay/jetty/alpn/jetty-alpn-agent/2.0.9/jetty-alpn-agent-2.0.9-sources.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

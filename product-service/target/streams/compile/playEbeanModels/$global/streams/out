@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0mjava.lang.NoClassDefFoundError: play/Configuration[0m
+[0m[[0m[31merror[0m] [0m[0m	at play.db.ebean.ModelsConfigLoader.apply(ModelsConfigLoader.java:27)[0m
+[0m[[0m[31merror[0m] [0m[0m	at play.db.ebean.ModelsConfigLoader.apply(ModelsConfigLoader.java:21)[0m
+[0m[[0m[31merror[0m] [0m[0m	at play.ebean.sbt.PlayEbean$.$anonfun$configuredEbeanModels$4(PlayEbean.scala:153)[0m

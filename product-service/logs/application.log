@@ -1,0 +1,11 @@
+2019-04-10 12:07:40,781 [INFO] from play.core.server.AkkaHttpServer in play-dev-mode-shutdown-hook-1 - Stopping server...
+2019-04-10 12:07:40,800 [WARN] from akka.actor.CoordinatedShutdown in play-dev-mode-akka.actor.default-dispatcher-8 - Task [shutdown-application-dev-mode] failed in phase [service-stop]: Unexpected exception[CreationException: Unable to create injector, see the following errors:
+
+1) Could not find a suitable constructor in routers.HelloWorldRouter. Classes must have either one (and only one) constructor annotated with @Inject or a zero-argument constructor that is not private.
+  at routers.HelloWorldRouter.class(HelloWorldRouter.java:15)
+  while locating routers.HelloWorldRouter
+    for the 3rd parameter of router.Routes.<init>(Routes.scala:34)
+  at play.api.inject.RoutesProvider$.bindingsFromConfiguration(BuiltinModule.scala:123):
+Binding(class router.Routes to self) (via modules: com.google.inject.util.Modules$OverrideModule -> play.api.inject.guice.GuiceableModuleConversions$$anon$4)
+
+1 error]

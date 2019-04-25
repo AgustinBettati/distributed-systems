@@ -13,8 +13,8 @@ object ProductServer extends App {
   val server = ServerBuilder.forPort(port)
     .addService(ProductServiceGrpc.bindService(new ProductService(), ExecutionContext.global))
     .build()
-
   server.start()
+  EtcdManager.registerInstanceInEtcd(9000, "product")
   println(s"Running in $port")
   server.awaitTermination()
 
