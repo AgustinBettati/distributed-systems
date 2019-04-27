@@ -1,10 +1,16 @@
 version: '3'
 
 services:
+# para levantar etcd
 
-# para levantar base de datos y servicios
-# docker-compose down
-# docker-compose up --force-recreate
+# docker run -p 2379:2379 quay.io/coreos/etcd:v3.2.0 \
+#   /usr/local/bin/etcd \
+#   --advertise-client-urls http://0.0.0.0:2379 \
+#   --listen-client-urls http://0.0.0.0:2379 \
+#   --initial-advertise-peer-urls http://0.0.0.0:2380 \
+#   --listen-peer-urls http://0.0.0.0:2380 \
+#   --initial-cluster "default=http://0.0.0.0:2380"
+
 
 # para correr solo la base de datos:
 # docker-compose run --service-ports database
@@ -18,6 +24,12 @@ services:
       MYSQL_PASSWORD: "pass"
     ports:
       - "3306:3306"
+
+
+# para levantar base de datos y servicios
+# docker-compose down
+# docker-compose up --force-recreate
+
 
   product-service:
     build: ./product-service-grpc

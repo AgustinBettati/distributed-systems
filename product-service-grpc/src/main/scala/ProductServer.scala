@@ -15,6 +15,7 @@ object ProductServer extends App {
     .build()
 
   server.start()
+  EtcdManager.registerInstanceInEtcd(port, "product")
   println(s"Running in $port")
   server.awaitTermination()
 
