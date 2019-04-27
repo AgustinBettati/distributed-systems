@@ -1,6 +1,6 @@
 import java.util
+import java.util.function.Supplier
 
-import LoadBalancers.{ProductBalancer, UserBalancer}
 import generated.product_service.{ProductList, ProductRequest, ProductServiceGrpc, ProductsRequest}
 import generated.user.{ProductUserRequest, UserRequest, UserServiceGrpc, UsersRequest}
 import io.grpc.stub.AbstractStub
@@ -14,22 +14,17 @@ object ClientDemo extends App {
 
   implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
-  def obtainStubs[T](channelToStub: ManagedChannel => T, ports: List[Int]): List[(T, Int)] = {
-    ports.map {
-      port => (channelToStub(ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()), port)
-    }
-  }
 
-  //TODO que el watcher cree lo stubs
+  val productsWatcher: EtcdServiceWatcher[ProductServiceGrpc.ProductServiceStub] = new EtcdServiceWatcher("product", (port: Integer) => {
+    val channel: ManagedChannel = ManagedChannelBuilder.forAddress("localhost", 9000)
+      .usePlaintext(true)
+      .build()
+    ProductServiceGrpc.stub(channel)
+  })
 
-  private val ports: util.List[Integer] = new EtcdServiceWatcher("product").obtainPorts()
+  private val stubs: util.Map[Integer, ProductServiceGrpc.ProductServiceStub] = productsWatcher.obtainStubs()
 
-  private val productServiceBalancer = ProductBalancer(
-    obtainStubs((channel: ManagedChannel) => ProductServiceGrpc.stub(channel), List(9000, 9001))
-  )
-  private val userServiceBalancer = UserBalancer(
-    obtainStubs((channel: ManagedChannel) => UserServiceGrpc.stub(channel), List(8000, 8001))
-  )
+  println("initial ports: " + stubs.keySet().toString)
 
 
 //  val users = userServiceBalancer.obtainStub.getUsers(UsersRequest())
@@ -40,7 +35,7 @@ object ClientDemo extends App {
 //        print(u.name + "\t\t" + u.productReferences.get.id.mkString(", ") + "\n")
 //      )
 
-      val products: Future[ProductList] = productServiceBalancer.obtainStub.getProducts(ProductsRequest())
+      val products: Future[ProductList] = productsWatcher.obtainStub.getProducts(ProductsRequest())
       products.onComplete {
         case Success(productsResp) =>
           print("\nProducts: \n")
@@ -48,6 +43,7 @@ object ClientDemo extends App {
           for (elem <- productsResp.product) {
             print(elem.id + " ----> " + elem.name + " , " + elem.description + "\n")
           }
+
 //          print("\n\nAdding product 1 to flor...\n")
 //          userServiceBalancer.obtainStub.addProduct(ProductUserRequest(40, 1)).onComplete {
 //            case Success(_) =>
@@ -65,5 +61,5 @@ object ClientDemo extends App {
 //    case Failure(exception) => print("failed to obtain users")
 //  }
 
-  System.in.read()
+  System.in.read();
 }
