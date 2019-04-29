@@ -1,8 +1,9 @@
 version: '3'
 
 services:
-# para levantar etcd
+# Pasos para levantar el sistema: 
 
+# 1) Levantar etcd
 # docker run -p 2379:2379 quay.io/coreos/etcd:v3.2.0 \
 #   /usr/local/bin/etcd \
 #   --advertise-client-urls http://0.0.0.0:2379 \
@@ -11,10 +12,13 @@ services:
 #   --listen-peer-urls http://0.0.0.0:2380 \
 #   --initial-cluster "default=http://0.0.0.0:2380"
 
-
+# 2) Levantar la base de datos mysql
 # para correr solo la base de datos:
 # docker-compose run --service-ports database
-# cambiar url de jdbc en app.conf de 'host.docker.internal' a 'localhost' 
+
+
+# 3) ir a cada servicio y levantar con sbt "run {port}" siendo {port} el puerto donde en el cual va a correr.
+
   database:
     image: mysql:8.0.15
     environment:
@@ -25,40 +29,6 @@ services:
     ports:
       - "3306:3306"
 
-
-# para levantar base de datos y servicios
-# docker-compose down
-# docker-compose up --force-recreate
-
-
-  product-service:
-    build: ./product-service-grpc
-    depends_on:
-    - database
-    ports:
-      - "9000:9000"
-
-  product-service-2:
-    build: ./product-service-grpc
-    depends_on:
-    - database
-    ports:
-      - "9001:9000"
-
-
-  user-service:
-    build: ./user-service-grpc
-    depends_on:
-    - database
-    ports:
-      - "8000:8000"
-
-  user-service-2:
-    build: ./user-service-grpc
-    depends_on:
-    - database
-    ports:
-      - "8001:8000"
 
 
 
