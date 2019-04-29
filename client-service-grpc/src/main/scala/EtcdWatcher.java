@@ -80,6 +80,7 @@ public class EtcdWatcher<T> {
     public T obtainStub(){
         final Object[] keys = this.portWithStub.keySet().toArray();
         int index = new Random().nextInt(keys.length);
+        System.out.println("using instance "+ keys[index] +" of " + serviceName + " service.") ;
         return portWithStub.get(keys[index]);
     }
 }

@@ -3,6 +3,8 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "generated";
 
+import "product-service.proto";
+
 service ActivityService {
     rpc GetUserActivity (UserActivityRequest) returns (UserActivity);
     rpc GetInactiveUsers (UsersActivityRequest) returns (UserActivityList);
@@ -24,8 +26,5 @@ message UserActivityRequest {
 }
 
 message UsersActivityRequest {
-}
-
-message Ping {
 }
 

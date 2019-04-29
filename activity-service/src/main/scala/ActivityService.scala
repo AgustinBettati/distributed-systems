@@ -20,19 +20,16 @@ class ActivityService extends ActivityServiceGrpc.ActivityService {
   override def healthCheck(request: Ping): Future[Ping] = Future.successful(Ping())
 
   override def getInactiveUsers(request: UsersActivityRequest): Future[UserActivityList] = {
-    import java.text.SimpleDateFormat
-    val formatter = new SimpleDateFormat("d-MMM-yyyy,HH:mm:ss aaa")
-
     val activities = ActivityDatabase.getAllUserActivities
-    val tuples = activities.map(u => (u.id, formatter.parse(u.date)))
-    val filter = tuples.filter(tuple => tuple._2.compareTo(new Date()) < -1000)
+    val tuples = activities.map(u => (u.id, DateUtil.fromStringToDate(u.date)))
+    val filter = tuples.filter{case (user: Int, date: Date) => new Date().getTime - date.getTime > 10000}
     val result = filter.map(a => activity_service.UserActivity(a._1, a._2.toString))
 
     Future.successful(activity_service.UserActivityList(result))
   }
 
-  override def registerActivity(request: activity_service.UserActivity): Future[activity_service.UserActivity] = {
-    val value = ActivityDatabase.registerUserActivity(request.id, request.date).get
+  override def registerActivity(request: UserActivityRequest): Future[activity_service.UserActivity] = {
+    val value = ActivityDatabase.registerUserActivity(request.id, DateUtil.fromDateToString(new Date())).get
     Future.successful(activity_service.UserActivity(value.id,value.date))
   }
 }

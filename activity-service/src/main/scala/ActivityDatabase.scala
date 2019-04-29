@@ -16,23 +16,25 @@ object ActivityDatabase {
 
   val connection: Connection = DriverManager.getConnection(jdbcUrl)
 
-  private val date = new Date().toString()
 
   def setup(): Unit = {
     if (!tableExists) {
-      println("Creating product table")
+      println("Creating user activity table")
       connection.createStatement().execute(
         """
           |create table userActivity (
-          |  id                            bigint auto_increment not null,
-          |  date                          varchar(255),
+          |  id                             bigint auto_increment not null,
+          |  date                           varchar(255),
+          |  constraint pk_activity primary key (id)
           |);
         """.stripMargin)
-      connection.createStatement().execute(s"insert into userActivity (id,date) values (  1,$date);")
-      connection.createStatement().execute(s"insert into userActivity (id,date) values (  2,$date);")
-      connection.createStatement().execute(s"insert into userActivity (id,date) values (  3,$date);")
-      connection.createStatement().execute(s"insert into userActivity (id,date) values (  4,$date');")
-      connection.createStatement().execute(s"insert into userActivity (id,date) values (  5,$date);")
+      val date = DateUtil.fromDateToString(new Date())
+      println("successfully created table")
+      connection.createStatement().execute(s"insert into userActivity (id,date) values (  1,'$date');")
+      connection.createStatement().execute(s"insert into userActivity (id,date) values (  2,'$date');")
+      connection.createStatement().execute(s"insert into userActivity (id,date) values (  3,'$date');")
+      connection.createStatement().execute(s"insert into userActivity (id,date) values (  4,'$date');")
+      connection.createStatement().execute(s"insert into userActivity (id,date) values (  5,'$date');")
     }
   }
 
@@ -56,7 +58,8 @@ object ActivityDatabase {
   }
 
   def registerUserActivity(id: Int, date: String): Option[UserActivity] = {
-    val statement = connection.createStatement().execute(s"insert into userActivity (id,date) values (  $id,$date);")
+    connection.createStatement().execute(s"delete from userActivity where id=$id;")
+    connection.createStatement().execute(s"insert into userActivity (id,date) values (  $id,'$date');")
     getUserActivityById(id)
   }
 
