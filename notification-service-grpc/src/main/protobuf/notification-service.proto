@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated";
+
+service NotificationService {
+  rpc SendNotification (UserId) returns (MailContent);
+  rpc HealthCheck (Ping) returns (Ping);
+}
+
+message UserId {
+  int32 id = 1;
+}
+
+message ProductRequest {
+  int32 id = 1;
+}
+
+message MailContent{
+    string message = 1;
+}
+
+message Ping {
+}
