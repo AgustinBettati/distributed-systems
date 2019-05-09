@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated";
+
+import "notification-service.proto";
+
+service WishlistService {
+    rpc GetUserWithProducts (UserRequest) returns (User);
+    rpc GetUsers (UsersRequest) returns (UserList);
+    rpc AddProduct (ProductUserRequest) returns (ModificationResponse);
+    rpc DeleteProduct (ProductUserRequest) returns (ModificationResponse);
+    rpc HealthCheck (Ping) returns (Ping);
+
+}
+
+message User {
+    int32 id = 1;
+    string email = 2;
+    ProductReferences productReferences = 3;
+}
+
+message UserList {
+    repeated User users = 1;
+}
+
+message UserRequest {
+    int32 id = 1;
+}
+
+message ModificationResponse {
+    bool result = 1;
+}
+
+message UsersRequest {
+}
+message ProductUserRequest {
+    int32 idUser = 1;
+    int32 idProduct = 2 ;
+
+}
+message ProductReferences {
+    repeated int32 id = 1;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated";
+
+import "notification-service.proto";
+
+service ProductService {
+  rpc GetProduct (ProductRequest) returns (Product);
+  rpc GetProducts (ProductsRequest) returns (ProductList);
+  rpc HealthCheck (Ping) returns (Ping);
+}
+
+message Product {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message ProductList {
+  repeated Product product = 1;
+}
+
+message ProductsRequest {
+}

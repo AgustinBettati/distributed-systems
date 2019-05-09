@@ -1,12 +1,11 @@
 import generated.notification_service.NotificationServiceGrpc
-import io.grpc.{ManagedChannelBuilder, ServerBuilder}
+import io.grpc.{ServerBuilder}
 
-import scala.collection.immutable
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext}
 
 
 object NotificationServer extends App {
-  ProductDatabase.setup()
+  NotificationDatabase.setup()
 
   val port = Integer.parseInt(args(0))
   val server = ServerBuilder.forPort(port)

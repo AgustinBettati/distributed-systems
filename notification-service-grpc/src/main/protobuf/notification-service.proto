@@ -4,7 +4,7 @@ option java_multiple_files = true;
 option java_package = "generated";
 
 service NotificationService {
-  rpc SendNotification (UserId) returns (MailContent);
+  rpc SendNotification (UserId) returns (SentMail);
   rpc HealthCheck (Ping) returns (Ping);
 }
 
@@ -16,7 +16,7 @@ message ProductRequest {
   int32 id = 1;
 }
 
-message MailContent{
+message SentMail{
     string message = 1;
 }
 

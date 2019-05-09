@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated";
+
+import "notification-service.proto";
+
+service MailService {
+  rpc SendMail (MailContent) returns (Empty);
+  rpc HealthCheck (Ping) returns (Ping);
+}
+
+message MailContent{
+    string mail = 1;
+    string message = 2;
+}
+
+message Empty{}
