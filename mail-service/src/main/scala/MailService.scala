@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 class MailService extends MailServiceGrpc.MailService{
   override def sendMail(request: MailContent): Future[Empty] = {
-    println("to: " + request.mail + " message: " + request.message)
+    println("[MAIL SERVICE] to: " + request.mail + " message: " + request.message)
     Future.successful(
       Empty(
 

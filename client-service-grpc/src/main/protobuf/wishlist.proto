@@ -4,8 +4,8 @@ option java_multiple_files = true;
 option java_package = "generated";
 import "product-service.proto";
 
-service UserService {
-    rpc GetUser (UserRequest) returns (User);
+service WishlistService {
+    rpc GetUserWithProducts (UserRequest) returns (User);
     rpc GetUsers (UsersRequest) returns (UserList);
     rpc AddProduct (ProductUserRequest) returns (ModificationResponse);
     rpc DeleteProduct (ProductUserRequest) returns (ModificationResponse);
@@ -14,7 +14,7 @@ service UserService {
 
 message User {
     int32 id = 1;
-    string name = 2;
+    string email = 2;
     ProductReferences productReferences = 3;
 }
 

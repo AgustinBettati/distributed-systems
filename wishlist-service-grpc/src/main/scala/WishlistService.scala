@@ -1,11 +1,11 @@
-import generated.user._
+import generated.wishlist._
 
 import scala.concurrent.Future
 
-class UserService extends UserServiceGrpc.UserService {
+class WishlistService extends WishlistServiceGrpc.WishlistService {
 
-  override def getUser(request: UserRequest): Future[User] = {
-    UserDatabase.getUserById(request.id) match {
+  override def getUserWithProducts(request: UserRequest): Future[User] = {
+    WishlistDatabase.getUserById(request.id) match {
       case Some(UserSchema(id, name, productRefs)) =>
         Future.successful(User(id, name, Option(ProductReferences(productRefs))))
       case None =>
@@ -14,7 +14,7 @@ class UserService extends UserServiceGrpc.UserService {
   }
 
   override def getUsers(request: UsersRequest): Future[UserList] = {
-    val users = UserDatabase.getAllUsers
+    val users = WishlistDatabase.getAllUsers
     Future.successful(
       UserList(
         users.map {
@@ -24,11 +24,11 @@ class UserService extends UserServiceGrpc.UserService {
     )
   }
   override def addProduct(request: ProductUserRequest): Future[ModificationResponse] = {
-    Future.successful(ModificationResponse(UserDatabase.addProductToUser(request.idProduct, request.idUser)))
+    Future.successful(ModificationResponse(WishlistDatabase.addProductToUser(request.idProduct, request.idUser)))
   }
 
   override def deleteProduct(request: ProductUserRequest): Future[ModificationResponse] = {
-    Future.successful(ModificationResponse(UserDatabase.deleteProductFromUser(request.idProduct, request.idUser)))
+    Future.successful(ModificationResponse(WishlistDatabase.deleteProductFromUser(request.idProduct, request.idUser)))
   }
 
   override def healthCheck(request: Ping): Future[Ping] = Future.successful(Ping())

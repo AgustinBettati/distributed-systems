@@ -1,20 +1,6 @@
-import generated.activity_service.{
-  ActivityServiceGrpc,
-  UserActivityRequest,
-  UsersActivityRequest
-}
-import generated.product_service.{
-  ProductList,
-  ProductRequest,
-  ProductServiceGrpc,
-  ProductsRequest
-}
-import generated.user.{
-  ProductUserRequest,
-  UserRequest,
-  UserServiceGrpc,
-  UsersRequest
-}
+import generated.activity_service.{ActivityServiceGrpc, UserActivityRequest, UsersActivityRequest}
+import generated.product_service.{ProductList, ProductServiceGrpc, ProductsRequest}
+import generated.wishlist.{ProductUserRequest, UserRequest, UsersRequest, WishlistServiceGrpc}
 import io.grpc.stub.AbstractStub
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 
@@ -43,12 +29,12 @@ object ClientDemo extends App {
     }
   )
 
-  val wishListServiceWatcher: EtcdWatcher[UserServiceGrpc.UserServiceStub] =
+  val wishListServiceWatcher: EtcdWatcher[WishlistServiceGrpc.WishlistServiceStub] =
     new EtcdWatcher(
       "wishlist",
       (port: Integer) => {
         val channel: ManagedChannel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()
-        UserServiceGrpc.stub(channel)
+        WishlistServiceGrpc.stub(channel)
       }
     )
 
@@ -82,7 +68,7 @@ object ClientDemo extends App {
       value.users.foreach(
         u =>
           print(
-            u.name + "\t\t" + u.productReferences.get.id.mkString(", ") + "\n"))
+            u.email + "\t\t" + u.productReferences.get.id.mkString(", ") + "\n"))
 
       val products: Future[ProductList] =
         productServiceWatcher.obtainStub.getProducts(ProductsRequest())
@@ -98,9 +84,9 @@ object ClientDemo extends App {
           wishListServiceWatcher.obtainStub.addProduct(ProductUserRequest(40, 1)).onComplete {
               case Success(_) =>
                 print("Product added!\n")
-                wishListServiceWatcher.obtainStub.getUser(UserRequest(40)).onComplete {
+                wishListServiceWatcher.obtainStub.getUserWithProducts(UserRequest(40)).onComplete {
                     case Success(user) =>
-                      print(user.name + "\t\t" + user.productReferences.get.id
+                      print(user.email + "\t\t" + user.productReferences.get.id
                         .mkString(", ") + "\n")
                       wishListServiceWatcher.obtainStub.deleteProduct(
                         ProductUserRequest(40, 1))

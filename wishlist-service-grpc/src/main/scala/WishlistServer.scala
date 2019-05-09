@@ -1,14 +1,14 @@
-import generated.user.UserServiceGrpc
+import generated.wishlist.WishlistServiceGrpc
 import io.grpc.ServerBuilder
 
 import scala.concurrent.ExecutionContext
 
-object UserServer extends App {
-  UserDatabase.setup()
+object WishlistServer extends App {
+  WishlistDatabase.setup()
 
   val port = Integer.parseInt(args(0))
   val server = ServerBuilder.forPort(port)
-    .addService(UserServiceGrpc.bindService(new UserService(), ExecutionContext.global))
+    .addService(WishlistServiceGrpc.bindService(new WishlistService(), ExecutionContext.global))
     .build()
 
   server.start()

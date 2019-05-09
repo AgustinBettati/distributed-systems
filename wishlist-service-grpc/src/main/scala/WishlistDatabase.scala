@@ -1,8 +1,8 @@
 import java.sql.{Connection, DriverManager}
 
-case class UserSchema(id: Int, name: String, productRefs: Seq[Int])
+case class UserSchema(id: Int, email: String, productRefs: Seq[Int])
 
-object UserDatabase {
+object WishlistDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
  val jdbcHostname = "localhost" // si vas a correr localmente
@@ -22,14 +22,14 @@ object UserDatabase {
         """
           |create table user (
           |  id                            bigint auto_increment not null,
-          |  name                          varchar(255),
+          |  email                          varchar(255),
           |  constraint pk_user primary key (id)
           |);
         """.stripMargin)
-      connection.createStatement().execute("insert into user (id,name) values (  10,'gonza');")
-      connection.createStatement().execute("insert into user (id,name) values (  20,'apu');")
-      connection.createStatement().execute("insert into user (id,name) values (  30,'marcos');")
-      connection.createStatement().execute("insert into user (id,name) values (  40,'flor');")
+      connection.createStatement().execute("insert into user (id,email) values (  10,'gonza@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  20,'apu@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  30,'marcos@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  40,'flor@gmail.com');")
     }
     def setupProductUser = {
       println("Creating product_user table")
@@ -65,7 +65,7 @@ object UserDatabase {
       users =
         UserSchema(
           userId,
-          resultSet.getString("name"),
+          resultSet.getString("email"),
           getProductsFromUser(userId)) :: users
     }
     users
@@ -78,7 +78,7 @@ object UserDatabase {
       val userId = resultSet.getInt("id")
       Some(UserSchema(
         userId,
-        resultSet.getString("name"),
+        resultSet.getString("email"),
         getProductsFromUser(userId)))
     }
     else None
