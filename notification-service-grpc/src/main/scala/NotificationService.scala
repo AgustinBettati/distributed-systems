@@ -1,9 +1,11 @@
-import java.sql.Date
+
+import java.util.Date
 
 import generated.mail_service.{MailContent, MailServiceGrpc}
 import generated.notification_service.{NotificationServiceGrpc, Ping, ProductRequest, SentMail, UserId}
+import generated.product_service
 import generated.product_service.ProductServiceGrpc
-import generated.wishlist.{UserRequest, WishlistServiceGrpc}
+import generated.wishlist.{User, UserRequest, WishlistServiceGrpc}
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,34 +46,45 @@ class NotificationService extends NotificationServiceGrpc.NotificationService {
 
   override def sendNotification(request: UserId): Future[SentMail] = {
     var nowDate: Date = new Date()
-    NotificationDatabase.obtainLastNotification(request.id){
-      //case encuentra una fecha vieja -> manda mail (primero wishlist, desp product service ultimo mail service)
+    NotificationDatabase.obtainLastNotification(request.id) match {
       case Some(lastNotification: String) => {
-        if ((DateUtil.fromStringToDate(lastNotification).getTime() - nowDate.getTime()) > 30000) {
+        if (nowDate.getTime - DateUtil.fromStringToDate(lastNotification).getTime() > 10000) {
           sendMail(request, nowDate)
         }
-        //case encuentra una fecha reciente -> no hace nada
+        else {
+          Future.failed(new RuntimeException("mail se habia mandado hace poco"))
+        }
       }
       case None =>
         sendMail(request, nowDate)
-        NotificationDatabase.setLastNotification(request.id, nowDate)
-        //mandarle mail -> mando mail idem fecha vieja. Guardo en la base de datos nueva fecha de mail
     }
   }
 
-  def sendMail(request: UserId, nowDate: Date): Unit = {
-    wishlistServiceWatcher.obtainStub().getUserWithProducts(UserRequest(request.id)).map(user => {
-      user.productReferences.map(products => {
-        val productId = products.id.head
+  def sendMail(request: UserId, nowDate: Date): Future[SentMail] = {
 
-        productServiceWatcher.obtainStub().getProduct(ProductRequest(productId)).map(product => {
-          mailServiceWatcher.obtainStub().sendMail(MailContent(user.email, product.name + product.description))
-        })
-      })
+    val eventualUser: Future[User] = wishlistServiceWatcher.obtainStub().getUserWithProducts(UserRequest(request.id))
+    eventualUser.flatMap(user => {
+
+      user.productReferences match {
+        case Some(references) =>
+          val productIds: Seq[Int] = references.id
+
+          val eventualProducts = productIds.map(id => productServiceWatcher.obtainStub().getProduct(ProductRequest(id)))
+          val futureOfProducts: Future[Seq[product_service.Product]] = Future.sequence(eventualProducts)
+
+          futureOfProducts.map(products => {
+            NotificationDatabase.setLastNotification(request.id, nowDate)
+            mailServiceWatcher.obtainStub().sendMail(MailContent(user.email, products.mkString(", ")))
+            SentMail(products.mkString(", "))
+          })
+        case None =>
+          Future.failed(new RuntimeException("no se encontraron referencia de productos"))
+
+      }
     })
 
-    NotificationDatabase.setLastNotification(request.id, nowDate)
   }
+
 
   override def healthCheck(request: Ping): Future[Ping] = Future.successful(Ping())
 

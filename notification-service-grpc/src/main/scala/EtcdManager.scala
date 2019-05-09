@@ -1,7 +1,8 @@
 import java.nio.charset.Charset
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{CompletableFuture, TimeUnit}
 
 import akka.actor.ActorSystem
+import io.etcd.jetcd.lock.LockResponse
 import io.etcd.jetcd.options.PutOption
 import io.etcd.jetcd.{ByteSequence, Client, KV}
 
@@ -11,6 +12,7 @@ import scala.concurrent.duration._
 object EtcdManager  {
   val client: Client = Client.builder().endpoints("http://localhost:2379").build()
   val leaseClient = client.getLeaseClient
+  val lockClient = client.getLockClient
 
   def registerInstanceInEtcd(port: Int, serviceName: String): Unit = {
     val client: Client = Client.builder().endpoints("http://localhost:2379").build()
@@ -25,6 +27,24 @@ object EtcdManager  {
     * Esto se usa para que el servicio no quede registrado cuando se cae.
     * */
     keepLeaseAlive(id)
+  }
+
+
+  def askForMaster(port: Int, ifGrantedMaster: () => Unit): CompletableFuture[LockResponse] = {
+    val leaseID: Long = grantLease(3)
+    keepLeaseAlive(leaseID)
+    lockClient.lock(ByteSequence.from(s"notificationMaster".getBytes()),leaseID)
+      .whenComplete((resp, throwable) => {
+        if(throwable != null){
+          println(s"error when asking for master")
+          askForMaster(port, ifGrantedMaster)
+        }
+        else{
+          println(s"port $port was assigned as master")
+          ifGrantedMaster()
+        }
+
+      })
   }
 
   private def grantLease(ttl: Long): Long = {

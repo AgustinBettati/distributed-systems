@@ -1,4 +1,5 @@
-import java.sql.{Connection, Date, DriverManager}
+import java.sql.{Connection, DriverManager}
+import java.util.Date
 
 case class NotificationSchema(id: Int, userId: Int, lastNotification: String)
 
@@ -23,34 +24,37 @@ object NotificationDatabase {
       connection.createStatement().execute(
         """
           |create table notification (
-          |  id                            bigint auto_increment not null,
-          |  userId                          Int,
+          |  userId                          bigint auto_increment not null,
           |  lastNotification                varchar(255),
-          |  constraint pk_notification primary key (id)
+          |  constraint pk_notification primary key (userId)
           |);
         """.stripMargin)
-      connection.createStatement().execute(s"insert into notification (id, userId, lastNotification) values (  1, 10, $dateString);")
-      connection.createStatement().execute(s"insert into notification (id, userId, lastNotification) values (  2, 11, $dateString);")
-      connection.createStatement().execute(s"insert into notification (id, userId, lastNotification) values (  3, 12, $dateString);")
-      connection.createStatement().execute(s"insert into notification (id, userId, lastNotification) values (  4, 13, $dateString);")
+      connection.createStatement().execute(s"insert into notification (userId, lastNotification) values (  1, '$dateString');")
+      connection.createStatement().execute(s"insert into notification (userId, lastNotification) values (  2, '$dateString');")
+      connection.createStatement().execute(s"insert into notification (userId, lastNotification) values (  3, '$dateString');")
+      connection.createStatement().execute(s"insert into notification (userId, lastNotification) values (  4, '$dateString');")
+      connection.createStatement().execute(s"insert into notification (userId, lastNotification) values (  5, '$dateString');")
     }
   }
 
   def obtainLastNotification(id: Int): Option[String] = {
     val statement = connection.createStatement()
-    val resultSet = statement.executeQuery(s"SELECT * FROM notification WHERE id = $id")
-    Some(resultSet.getString("lastNotification"))
+    val resultSet = statement.executeQuery(s"SELECT * FROM notification WHERE userId = $id")
+    if (resultSet.next()) {
+      Some(resultSet.getString("lastNotification"))
+    }
+    else None
   }
 
   def setLastNotification(id: Int, date: Date): Unit = {
-    val statement = connection.createStatement()
-    val dateString = DateUtil.fromDateToString(date)
-    val resultSet = statement.executeQuery(s"UPDATE notification SET lastNotification = $dateString WHERE id = $id")
+    val stringDate = DateUtil.fromDateToString(date)
+    connection.createStatement().execute(s"delete from notification where userId=$id;")
+    connection.createStatement().execute(s"insert into notification (userId,lastNotification) values (  $id,'$stringDate');")
   }
 
   private def tableExists: Boolean = {
     val dbm = connection.getMetaData
-    val tables = dbm.getTables(null, null, "product", null)
+    val tables = dbm.getTables(null, null, "notification", null)
     tables.next()
   }
 }

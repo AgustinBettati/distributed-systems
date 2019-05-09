@@ -26,10 +26,11 @@ object WishlistDatabase {
           |  constraint pk_user primary key (id)
           |);
         """.stripMargin)
-      connection.createStatement().execute("insert into user (id,email) values (  10,'gonza@gmail.com');")
-      connection.createStatement().execute("insert into user (id,email) values (  20,'apu@gmail.com');")
-      connection.createStatement().execute("insert into user (id,email) values (  30,'marcos@gmail.com');")
-      connection.createStatement().execute("insert into user (id,email) values (  40,'flor@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  1,'gonza@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  2,'apu@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  3,'marcos@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  4,'flor@gmail.com');")
+      connection.createStatement().execute("insert into user (id,email) values (  5,'john@gmail.com');")
     }
     def setupProductUser = {
       println("Creating product_user table")
