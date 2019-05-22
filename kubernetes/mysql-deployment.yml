@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  # al no especificar el type por default es un ClusterIP, por lo cual solo se accede adentro del cluster
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: mysql-secret
+#type: Opaque
+#data:
+#  MYSQL_ROOT_PASSWORD: cGFzc3dvcmQ= #password
+#  MYSQL_DATABASE: dGVzdA== #test
+#  MYSQL_USER: dGVzdHVzZXI= #testuser
+#  MYSQL_PASSWORD: dGVzdDEyMw== #test123
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mysql:8
+          name: mysql
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              value: pass
+            - name: MYSQL_DATABASE
+              value: db-sist
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: pass
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
