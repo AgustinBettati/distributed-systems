@@ -1,9 +1,9 @@
-#Como correr kubernetes
+# Como correr kubernetes
 
-##setup
+## setup
 bajarse minikube, y el driver hyperkit.
 
-##pasos a seguir
+## pasos a seguir
 levantar minikube: 
 ```minikube start --vm-driver hyperkit```
 
@@ -16,7 +16,7 @@ Teniendo la imagen creada podes hacer apply el deployment con ```kubectl apply -
 
 Cuando ya tenes el deployment con el servicio corriendo, podes correr ```minikube service product-svc ``` para exponer el load balancer desde minikube
 
-####linkerd
+#### linkerd
 
 para descargar el cli y configurar:
 
@@ -33,7 +33,7 @@ Para empezar a monitorear los deployments que estes corriendo:
 El dashboard se abre con:
 ```linkerd dashboard &```
 
-####comandos addicionales
+#### comandos addicionales
 ```minikube stop``` (para frenar todo)
 
 ```minikube delete``` (si tuviste algún problema con el minikube)
