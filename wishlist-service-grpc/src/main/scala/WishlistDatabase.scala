@@ -5,8 +5,9 @@ case class UserSchema(id: Int, email: String, productRefs: Seq[Int])
 object WishlistDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
- val jdbcHostname = "localhost" // si vas a correr localmente
-    // val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
+// val jdbcHostname = "localhost" // si vas a correr localmente
+  val jdbcHostname = "mysql" // si vas a correr en kubernetes
+  // val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"
@@ -42,13 +43,13 @@ object WishlistDatabase {
           |  constraint pk_product_user primary key (product_id, user_id)
           |);
         """.stripMargin)
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,10);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,10);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  3,10);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  4,10);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,20);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  2,20);")
-      connection.createStatement().execute("insert into product_user (product_id,user_id) values (  1,30);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (10, 1);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (10, 2);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (10, 3);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (10, 4);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (20, 1);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (20, 2);")
+      connection.createStatement().execute("insert into product_user (product_id,user_id) values (30, 1);")
     }
 
     if (!tableExists) {

@@ -6,8 +6,9 @@ case class NotificationSchema(id: Int, userId: Int, lastNotification: String)
 object NotificationDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-  val jdbcHostname = "localhost" // si vas a correr localmente
-//  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
+//  val jdbcHostname = "localhost" // si vas a correr localmente
+  val jdbcHostname = "mysql" // si vas a correr en kubernetes
+  //  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"

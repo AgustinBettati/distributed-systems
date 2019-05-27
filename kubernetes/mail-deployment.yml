@@ -1,20 +1,20 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: product-deployment
+  name: mail-deployment
 spec:
   selector:
     matchLabels:
-      app: product-app
+      app: mail-app
   replicas: 1
   template:
     metadata:
       labels:
-        app: product-app
+        app: mail-app
     spec:
       containers:
-        - name: product
-          image: products/latest
+        - name: mail
+          image: mail/latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000
@@ -23,12 +23,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: product-app
-  name: product-svc
+    app: mail-app
+  name: mail-svc
   namespace: default
 spec:
   type: LoadBalancer
   ports:
     - port: 9000
   selector:
-    app: product-app
+    app: mail-app

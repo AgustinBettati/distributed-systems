@@ -7,7 +7,7 @@ object ProductDatabase {
   Class.forName("com.mysql.cj.jdbc.Driver")
   //  val jdbcHostname = "localhost" // si vas a correr localmente
     val jdbcHostname = "mysql" // si vas a correr en kubernetes
-//  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
+  //  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"
   val username = "user"
@@ -28,11 +28,11 @@ object ProductDatabase {
           |  constraint pk_product primary key (id)
           |);
         """.stripMargin)
-      connection.createStatement().execute("insert into product (id,name,description) values (  1,'celular','description');")
-      connection.createStatement().execute("insert into product (id,name,description) values (  2,'tele','description');")
-      connection.createStatement().execute("insert into product (id,name,description) values (  3,'monitor','description');")
-      connection.createStatement().execute("insert into product (id,name,description) values (  4,'reloj','description');")
-      connection.createStatement().execute("insert into product (id,name,description) values (  5,'ipad','description');")
+      connection.createStatement().execute("insert into product (id,name,description) values (  10,'celular','description');")
+      connection.createStatement().execute("insert into product (id,name,description) values (  20,'tele','description');")
+      connection.createStatement().execute("insert into product (id,name,description) values (  30,'monitor','description');")
+      connection.createStatement().execute("insert into product (id,name,description) values (  40,'reloj','description');")
+      connection.createStatement().execute("insert into product (id,name,description) values (  50,'ipad','description');")
     }
   }
 

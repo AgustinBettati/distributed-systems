@@ -17,32 +17,16 @@ class NotificationService extends NotificationServiceGrpc.NotificationService {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  val wishlistServiceWatcher
-  : EtcdWatcher[WishlistServiceGrpc.WishlistServiceStub] = new EtcdWatcher(
-    "wishlist",
-    (port: Integer) => {
-      val channel: ManagedChannel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()
-      WishlistServiceGrpc.stub(channel)
-    }
-  )
+  //TODO estas referencias no estan funcionando, probar haciendo deployment con cluster ip
+  val wishlistChannel: ManagedChannel = ManagedChannelBuilder.forAddress("wishlist-app", 9000).usePlaintext(true).build()
+  val wishlistServiceStub = WishlistServiceGrpc.stub(wishlistChannel)
 
-  val productServiceWatcher
-  : EtcdWatcher[ProductServiceGrpc.ProductServiceStub] = new EtcdWatcher(
-    "product",
-    (port: Integer) => {
-      val channel: ManagedChannel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()
-      ProductServiceGrpc.stub(channel)
-    }
-  )
+  val productChannel: ManagedChannel = ManagedChannelBuilder.forAddress("product-app", 9000).usePlaintext(true).build()
+  val productServiceStub = ProductServiceGrpc.stub(productChannel)
 
-  val mailServiceWatcher
-  : EtcdWatcher[MailServiceGrpc.MailServiceStub] = new EtcdWatcher(
-    "mail",
-    (port: Integer) => {
-      val channel: ManagedChannel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext(true).build()
-      MailServiceGrpc.stub(channel)
-    }
-  )
+  val mailChannel: ManagedChannel = ManagedChannelBuilder.forAddress("mail-app", 9000).usePlaintext(true).build()
+  val mailServiceStub = MailServiceGrpc.stub(mailChannel)
+
 
   override def sendNotification(request: UserId): Future[SentMail] = {
     var nowDate: Date = new Date()
@@ -62,19 +46,19 @@ class NotificationService extends NotificationServiceGrpc.NotificationService {
 
   def sendMail(request: UserId, nowDate: Date): Future[SentMail] = {
 
-    val eventualUser: Future[User] = wishlistServiceWatcher.obtainStub().getUserWithProducts(UserRequest(request.id))
+    val eventualUser: Future[User] = wishlistServiceStub.getUserWithProducts(UserRequest(request.id))
     eventualUser.flatMap(user => {
 
       user.productReferences match {
         case Some(references) =>
           val productIds: Seq[Int] = references.id
 
-          val eventualProducts = productIds.map(id => productServiceWatcher.obtainStub().getProduct(ProductRequest(id)))
+          val eventualProducts = productIds.map(id => productServiceStub.getProduct(ProductRequest(id)))
           val futureOfProducts: Future[Seq[product_service.Product]] = Future.sequence(eventualProducts)
 
           futureOfProducts.map(products => {
             NotificationDatabase.setLastNotification(request.id, nowDate)
-            mailServiceWatcher.obtainStub().sendMail(MailContent(user.email, products.mkString(", ")))
+            mailServiceStub.sendMail(MailContent(user.email, products.mkString(", ")))
             SentMail(products.mkString(", "))
           })
         case None =>
