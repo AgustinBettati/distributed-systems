@@ -6,7 +6,8 @@ case class UserActivity(id: Int, date: String)
 object ActivityDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-  val jdbcHostname = "localhost" // si vas a correr localmente
+//  val jdbcHostname = "localhost" // si vas a correr localmente
+  val jdbcHostname = "mysql" // si vas a correr en kubernetes
   //  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
   val jdbcPort = 3306
   val jdbcDatabase = "db-sist"

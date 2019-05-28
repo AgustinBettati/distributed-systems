@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object NotificationServer extends App {
   NotificationDatabase.setup()
 
-  val port = Integer.parseInt(args(0))
+  val port = 9000
   val server = ServerBuilder.forPort(port)
     .addService(NotificationServiceGrpc.bindService(new NotificationService(), ExecutionContext.global))
     .build()

@@ -19,16 +19,28 @@ spec:
           ports:
             - containerPort: 9000
 ---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app: wishlist-app
+#  name: wishlist-svc
+#  namespace: default
+#spec:
+#  type: LoadBalancer
+#  ports:
+#    - port: 9000
+#  selector:
+#    app: wishlist-app
+
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: wishlist-app
   name: wishlist-svc
-  namespace: default
 spec:
-  type: LoadBalancer
-  ports:
-    - port: 9000
   selector:
     app: wishlist-app
+  ports:
+    - port: 9000

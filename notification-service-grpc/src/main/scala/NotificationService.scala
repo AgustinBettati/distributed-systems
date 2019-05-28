@@ -18,13 +18,13 @@ class NotificationService extends NotificationServiceGrpc.NotificationService {
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   //TODO estas referencias no estan funcionando, probar haciendo deployment con cluster ip
-  val wishlistChannel: ManagedChannel = ManagedChannelBuilder.forAddress("wishlist-app", 9000).usePlaintext(true).build()
+  val wishlistChannel: ManagedChannel = ManagedChannelBuilder.forAddress("wishlist-svc", 9000).usePlaintext(true).build()
   val wishlistServiceStub = WishlistServiceGrpc.stub(wishlistChannel)
 
-  val productChannel: ManagedChannel = ManagedChannelBuilder.forAddress("product-app", 9000).usePlaintext(true).build()
+  val productChannel: ManagedChannel = ManagedChannelBuilder.forAddress("product-svc", 9000).usePlaintext(true).build()
   val productServiceStub = ProductServiceGrpc.stub(productChannel)
 
-  val mailChannel: ManagedChannel = ManagedChannelBuilder.forAddress("mail-app", 9000).usePlaintext(true).build()
+  val mailChannel: ManagedChannel = ManagedChannelBuilder.forAddress("mail-svc", 9000).usePlaintext(true).build()
   val mailServiceStub = MailServiceGrpc.stub(mailChannel)
 
 
@@ -59,7 +59,7 @@ class NotificationService extends NotificationServiceGrpc.NotificationService {
           futureOfProducts.map(products => {
             NotificationDatabase.setLastNotification(request.id, nowDate)
             mailServiceStub.sendMail(MailContent(user.email, products.mkString(", ")))
-            SentMail(products.mkString(", "))
+            SentMail(s"Sent mail to ${user.email} with the given products: ${products.mkString(", ")}")
           })
         case None =>
           Future.failed(new RuntimeException("no se encontraron referencia de productos"))
