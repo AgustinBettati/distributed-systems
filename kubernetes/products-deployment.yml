@@ -26,28 +26,28 @@ spec:
                  key: dbUrl
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
- labels:
-   app: product-app
- name: product-svc
- namespace: default
-spec:
- type: LoadBalancer
- ports:
-   - port: 9000
- selector:
-   app: product-app
-
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   labels:
-#     app: product-app
-#   name: product-svc
+#  labels:
+#    app: product-app
+#  name: product-svc
+#  namespace: default
 # spec:
-#   selector:
-#     app: product-app
-#   ports:
-#     - port: 9000
+#  type: LoadBalancer
+#  ports:
+#    - port: 9000
+#  selector:
+#    app: product-app
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-app
+  name: product-svc
+spec:
+  selector:
+    app: product-app
+  ports:
+    - port: 9000
