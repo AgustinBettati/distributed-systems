@@ -1,3 +1,4 @@
+import java.io
 import java.sql.{Connection, DriverManager}
 
 case class ProductSchema(id: Int, name: String, description: String)
@@ -5,16 +6,9 @@ case class ProductSchema(id: Int, name: String, description: String)
 object ProductDatabase {
 
   Class.forName("com.mysql.cj.jdbc.Driver")
-  //  val jdbcHostname = "localhost" // si vas a correr localmente
-    val jdbcHostname = "mysql" // si vas a correr en kubernetes
-  //  val jdbcHostname = "host.docker.internal" // usar esto si vas a correr con docker
-  val jdbcPort = 3306
-  val jdbcDatabase = "db-sist"
-  val username = "user"
-  val password = "pass"
-  val jdbcUrl = s"jdbc:mysql://$username:$password@$jdbcHostname:$jdbcPort/$jdbcDatabase"
+  private val jdbcUrl: Option[String] = sys.env.get("DB-URL")
 
-  val connection: Connection = DriverManager.getConnection(jdbcUrl)
+  val connection: Connection = DriverManager.getConnection(jdbcUrl.get)
 
   def setup(): Unit = {
     if(!tableExists) {

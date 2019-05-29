@@ -12,6 +12,8 @@ esto no permite crear imagenes dentro del docker de kubernetes para poder correr
 
 Como ejemplo, si queres hacer deploy el products service primero tenes que buildear la imagen con ```docker build -t products/latest . ``` (estando en el directorio de products service, que el nombre del tag coincida con el nombre que pones en 'image')
 
+Levantar el config map con ```kubectl apply -f my-config.yaml```
+
 Teniendo la imagen creada podes hacer apply el deployment con ```kubectl apply -f “product-deployment.yml”```
 
 Cuando ya tenes el deployment con el servicio corriendo, podes correr ```minikube service product-svc ``` para exponer el load balancer desde minikube
